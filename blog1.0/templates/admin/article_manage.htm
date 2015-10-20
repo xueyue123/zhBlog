@@ -1,0 +1,104 @@
+{% extends 'admin/base.htm' %} {% load staticfiles %} {% block user %} {{ user }} {% endblock %} {% block content %}
+<!--main begin-->
+<div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font"></i><a href="/jscss/admin">后台首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">文章管理</span></div>
+</div>
+<div class="search-wrap">
+        <div class="search-content">
+                <form action="/jscss/admin/design/index" method="post">
+                        <table class="search-tab">
+                                <tr>
+                                        <th width="120">选择分类:</th>
+                                        <td>
+                                                <select name="search-sort" id="">
+                                                        <option value="">全部</option>
+                                                        {% for c in categories %}
+                                                                <option value="{{ c.id }}"> {{ c.name }} </option>
+                                                        {% endfor %}
+                                                </select>
+                                        </td>
+                                        <th width="70">关键字:</th>
+                                        <td>
+                                                <input class="common-text" placeholder="关键字" name="keywords" value="" id="" type="text">
+                                        </td>
+                                        <td>
+                                                <input class="btn btn-primary btn2" name="sub" value="查询" type="submit">
+                                        </td>
+                                </tr>
+                        </table>
+                </form>
+        </div>
+</div>
+<div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+                <div class="result-title">
+                        <div class="result-list">
+                                <a href="{% url 'add_article' %}"><i class="icon-font"></i>新增文章</a>
+                                <a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>批量删除</a>
+                                <a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a>
+                        </div>
+                </div>
+                <div class="result-content">
+                        <table class="result-tab" width="100%">
+                                <tr>
+                                        <th class="tc" width="5%">
+                                                <input class="allChoose" name="" type="checkbox">
+                                        </th>
+                                        <th>ID</th>
+                                        <th>标题</th>
+                                        <th>作者</th>
+                                        <th>点击</th>
+                                        <th>更新时间</th>
+                                        <th>操作</th>
+                                </tr>
+                                {% for a in articles %}
+                                <tr>
+                                        <td class="tc">
+                                                <input name="id[]" value="{{ a.id }}" type="checkbox">
+                                        </td>
+                                        <td>{{ a.id }}</td>
+                                        <td title="{{ a.title }}"><a id="{{ a.id }}" onclick="edit_onclick(this)" href="#"> {{ a.title }}</a></td>
+                                        <td>{{ a.author }}</td>
+                                        <td>{{ a.click }}</td>
+                                        <td> {{ a.date|date:"Y-m-d" }} {{ a.time|time:"H:i:s" }}</td>
+                                        <td>
+                                                <a class="link-update" id="{{ a.id }}" onclick="edit_onclick(this)" href="#">修改</a>
+                                                <a class="link-del" id="{{ a.id }}" onclick="del_onclick(this)" href="#">删除</a>
+                                        </td>
+                                </tr>
+                                {% endfor %}
+                        </table>
+                        <div class="list-page"> 2 条 1/1 页</div>
+                </div>
+        </form>
+</div>
+<!--main end-->
+{% endblock %}
+{% block script %}
+<script>
+        function edit_onclick(id){
+                //alert(id.id);
+                window.location.href="/admin/edit_article/?id="+id.id;
+                /*
+                $.get("/admin/edit_article/", {"id": id.id}, function(ret){
+                                $("html").html(ret);
+                                //location.reload(true);
+                                //location.replace("/admin/edit_article/");
+                });
+*/
+        }
+        function del_onclick(id) {      //删除选中的文章
+                $.ajax({
+                        type: "POST",
+                        url: "/admin/del_article/",
+                        data: {
+                                "id": id.id,
+                        },
+                        success: function(ret) {
+                                location.replace("/admin/article_manage/");
+                        }
+                });
+                //document.location = document.location;
+        }
+</script>
+{% endblock %}
