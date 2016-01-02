@@ -1,0 +1,45 @@
+{% extends 'blog/base.htm' %}
+<!---->
+{% load staticfiles %}
+<!---===================侧边栏分类列表部分===================-->
+{% block category %}
+<!---->
+{% for c in categories %}
+<li><a id="{{ c.id }}" onclick="category_article_list(this)" href="#">{{ c.name }}</a> ({{ c.count }})</li>
+{% endfor %}
+<!---->
+{% endblock %}
+<!---==================侧边栏随笔列表部分====================-->
+{% block essays %}
+<div class="catListEssay">
+        <h3 class="catListTitle">最新随笔</h3>
+        <ul>
+                {% for e in essays %}
+                <li><a id="{{ e.id }}" onclick="read_essays(this)" href="#">{{ e.title }}</a></li>
+                {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+<!---===========================================================================================-->
+{% block content %}
+<!---================= 所有文章 =====================-->
+<div class="day">
+        <div class="dayTitle">
+                <a title="Day link" href="#"></a>&nbsp; 所有文章
+        </div>
+        <div class=".pager">
+        </div>
+        <div id="myposts">
+                {% for article in articles %}
+                <div class="PostList">
+                        <div class="postTitl2">
+                                <a id="{{ article.id }}" onclick="read_article(this)" href="#" title="{{ article.title }}"> {{ article.title }} </a></div>
+                        <div class="postDesc2">
+                                {{ article.date|date:"Y-m-d" }} {{ article.time|time:"H:i:s" }} {{ article.author }} 阅读:{{ article.click }} 评论:3</div>
+                        <div class="postText2">
+                        </div>
+                </div>
+                {% endfor %}
+        </div>
+</div>
+{% endblock %}

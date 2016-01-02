@@ -1,0 +1,66 @@
+{% extends 'admin/base.htm' %} {% load staticfiles %} {% block user %} {{ user }} {% endblock %} {% block content %}
+<div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font"></i><a href="/think/admin">后台首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">用户设置</span></div>
+</div>
+<div class="clearfix">
+        <div class="user-info">
+                <div class="result-wrap">
+                        <form action="{% url 'user_setting' %}" method="post" id="myform" name="myform" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="config-items">
+                                        <div class="config-title">
+                                                <h1><i class="icon-font">&#xe00a;</i>用户信息设置</h1>
+                                        </div>
+                                        <div class="result-content">
+                                                <table width="100%" class="insert-tab">
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>昵称：</th>
+                                                                <td>
+                                                                        <input type="text" id="" value="{{ userprofile.nickname }}" size="32" style="width:320px;" name="nickname" class="common-text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>密码：</th>
+                                                                <td>
+                                                                        <input type="password" id="" value="" size="128" name="password" style="width:320px;" class="common-text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>邮箱：</th>
+                                                                <td>
+                                                                        <input type="text" id="" value="{{ user.email }}" size="75" style="width:320px;" name="email" class="common-text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>qq：</th>
+                                                                <td>
+                                                                        <input type="text" value="{{ userprofile.qq }}" size="20" style="width:320px;" name="qq" class="common-text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>备案ICP：</th>
+                                                                <td>
+                                                                        <input type="text" value="{{ userprofile.icp }}" size="85" style="width:320px;" name="icp" class="common-text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th></th>
+                                                                <td>
+                                                                        <input type="submit" value="提交" class="btn btn-primary btn6 mr10">
+                                                                        <input type="button" value="返回" onclick="history.go(-1)" class="btn btn6">
+                                                                </td>
+                                                        </tr>
+                                                </table>
+                                        </div>
+                                </div>
+                        </form>
+                </div>
+        </div>
+        <div class="photo-wrap">
+                <br>
+                <br>
+                <h2 align="center">用户图像</h2>
+                <p> <img src="/static/images/header.jpg" alt="默认图片" /></p>
+        </div>
+</div>
+{% endblock %}

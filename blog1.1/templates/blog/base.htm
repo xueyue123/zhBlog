@@ -1,0 +1,96 @@
+<!DOCTYPE html> {% load staticfiles %}
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <title>zh博客</title>
+        <meta id="metaKeywords" name="keywords" content="zhblog" />
+        <link id="MainCss" type="text/css" rel="stylesheet" href="/static/css/style.css" />
+        <script type="text/javascript" src="/static/js/blog_front.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+        {% block head %} {% endblock %}
+</head>
+
+<body>
+        <div id="home">
+                <div id="header">
+                        <div id="blogTitle">
+                                <a id="lnk" href="#">
+                                        <!--<img id="blogLogo" src="/static/images/header.jpgg" alt="博客logo" /></a>-->
+                                <h1><a class="headermaintitle" href="http://www.zhblog.cn/"> zhblog </a></h1>
+                                <h2>汪中华的 博客 &nbsp&nbsp&nbsp&nbsp 专注于Linux下C/C++编程， 网络编程，高并发服务器等技术......</h2>
+                                
+                        </div>
+                        <!--end: blogTitle 博客的标题和副标题 -->
+                        <div id="navigator">
+                                <ul id="navList">
+                                        <li><a class="menu" href="/">首页</a></li>
+                                        <li><a class="menu" href="/all_article/">文章</a></li>
+                                        <li><a class="menu" href="/all_essays/">随笔</a></li>
+                                        <li><a class="menu" href="#">相册</a></li>
+                                        <li><a class="menu" href="/message/">留言</a></li>
+                                        <li><a class="menu" href="#">博主</a></li>
+                                        <li><a class="menu" href="#">订阅</a></li>
+                                        <!--<li><a class="menu" onclick="AddFavorite('zhblog', 'http://www.zhblog.cn')" href="javascript:void(0)" title="收藏">收藏</a>-->
+                                        {% block collection %} {% endblock %}                                        
+                                </ul>
+                                <div class="blogStats">
+                                        <div id="navList">
+                                                <!--<a class="menu" href="/register/">注册</a>-->
+                                                <a class="menu" href="/admin/" target="_self">管理</a>
+                                        </div>
+                                </div>
+                        </div>
+                        {% block navigator %} {% endblock %}
+                </div>
+                <!--end: header 头部 -->
+                <div id="main">
+                        <!--主体内容部分 -->
+                        <div id="mainContent">
+                                <div class="forFlow">
+                                        {% block content %} {% endblock %}
+                                </div>
+                        </div>
+                        <!--侧边栏部分　-->
+                        <div id="sideBar">
+                                <div id="sideBarMain">
+                                        <div id="leftcontentcontainer">
+                                                <div class="mySearch">
+                                                        <h3 class="catListTitle">搜索</h3>
+                                                        <div>
+                                                                <input type="text" name="" id="q" />
+                                                                <input type="button" name="" value="搜索" /> </div>
+                                                </div>
+                                                <div class="catListPostCategory">
+                                                        <h3 class="catListTitle">文章分类</h3>
+                                                        <ul>
+                                                                {% block category %} {% endblock %}
+                                                        </ul>
+                                                </div>
+                                                {% block essays %} {% endblock %}
+                                                <div class="catListArticleArchive">
+                                                        <h3 class="catListTitle">文章档案</h3>
+                                                        <ul>
+                                                                <li><a href="#">2008年1月 (1)</a> </li>
+                                                                <li><a href="#">2007年12月 (7)</a> </li>
+                                                                <li><a href="#">2007年11月 (1)</a> </li>
+                                                        </ul>
+                                                </div>
+                                        </div>
+                                </div>
+                                <!--end: sideBarMain -->
+                                <div class="clear">
+                                </div>
+                                <!--end: sideBar 侧边栏容器 -->
+                        </div>
+                </div>
+                <!--end: main -->
+                <div class="clear"> </div>
+                <div id="footer"> Copyright ©2015 zhBlog</div>
+                <!--end: footer -->
+        </div>
+        <!--end: home 自定义的最大容器 -->
+</body>
+{% block script %} {% endblock %}
+
+</html>

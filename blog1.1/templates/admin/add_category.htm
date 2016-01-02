@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>add category</title>
+</head>
+<body>
+	
+<form action="/admin/add_category/" id="category_form" method="post">
+	{% csrf_token %}
+	<!--
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
+
+	{% for field in form.visible_fields %}
+		{{ field.error }}
+		{{ field.help_text }}
+		{{ field }}
+	{% endfor %}
+	-->
+	<!--
+	{{ form.as_p }}
+	<p>所属用户: <input type="text" name="user" id="user" /></p>
+	-->
+
+	<p>分类名称: <input type="text" name="name" id="name" /></p>
+	
+	 <input type="submit" name="submit" value="创建分类" />
+</form>
+</body>
+</html>
+
+

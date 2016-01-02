@@ -1,0 +1,104 @@
+{% extends 'admin/base.htm' %} {% load staticfiles %} {% block user %} {{ user }} {% endblock %} {% block content %}
+<!--main begin-->
+<div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font"></i><a href="{% url 'admin' %}">后台首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">相册管理</span></div>
+</div>
+<div class="result-wrap">
+        <div class="result-title">
+                <div class="result-list">
+                        <a href="#">新增相册:</a>
+                        <form action="">
+                                <input class="common-text" type="text" id="category_name" value="" />
+                                <input class="btn btn-primary btn2" type="button" id="commit" value="确定" />
+                                <span id="result"></span>
+                        </form>
+                </div>
+        </div>
+        {% if categories %}
+        <table class="result-tab" width="100%">
+                <tr>
+                        <th class="tc" width="5%">
+                                <input class="allChoose" name="" type="checkbox">
+                        </th>
+                        <th>ID</th>
+                        <th>相册名称</th>
+                        <th></th>
+                        <th>操作</th>
+                </tr>
+                <div id="category_list">
+                        {% for link in links %}
+                        <tr>
+                                <td class="tc">
+                                        <input name="id[]" id="user_id{{ link.id }}" value="{{ link.id }}" type="checkbox">
+                                </td>
+                                <td>{{ link.id }}</td>
+                                <td title="{{ link.name }}"><a title="{{ link.name }}" href="#">{{ link.name }}</a> ({{ link.count }})
+                                </td>
+                                <td>
+                                        <a class="link-del" id="{{ link.id }}" onclick="del_onclick(this)" href="#">删除</a>
+                                </td>
+                        </tr>
+                        {% endfor %}
+        </table>
+        {% else %}
+        <table class="result-tab" id="result-tab" width="100%">
+                <tr>
+                        <th class="tc" width="5%">
+                                <input class="allChoose" name="" type="checkbox">
+                        </th>
+                        <th>ID</th>
+                        <th>链接名称</th>
+                        <th>操作</th>
+                </tr>
+        </table>
+        <p>分类为空</p>
+        {% endif %}
+        </div>
+</div>
+{% endblock %} {% block script %}
+<script>
+$(document).ready(function() {
+        $("#commit").click(function(event) {
+                if ($("#category_name").val() == "") {
+                        $("#result").html("<strong>" + "分类名称不能为空" + "</strong>")
+                        return;
+                }
+                $.ajax({
+                        type: "POST",
+                        url: "/admin/add_category/",
+                        data: {
+                                "name": $("#category_name").val(),
+                        },
+                        success: function(ret) {
+                                if (ret == "分类名称不能为空") {
+                                        $("#result").html("<strong>" + ret + "</strong>");
+                                } else {
+                                        //location.reload(true);
+                                        location.replace("/admin/category_manage/");
+                                }
+                        }
+                });
+                //$("#category_name").empty();
+                //document.getElementById("category_name").value = "";
+                //document.location = document.location;
+        });
+});
+
+function del_onclick(id) {
+        //alert()提醒删除分类的同时会删除该分类下的所有文章
+        $.ajax({
+                type: "POST",
+                url: "/admin/del_category/",
+                data: {
+                        "id": id.id,
+                },
+                success: function(ret) {
+                        //location.reload(true);
+                        location.replace("/admin/category_manage/");
+                        //$("html").html(ret);
+                }
+        });
+        //document.location = document.location;
+}
+</script>
+{% endblock %}

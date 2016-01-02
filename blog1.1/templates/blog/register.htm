@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <title>注册</title>
+</head>
+
+<body>
+        <h1>用户注册</h1>
+         {% if registered %}
+            <h2>注册成功！</h2>
+            <h3><a href="/login/">登录博客后台</a></h3> 
+            <h3><a href="/">返回博客主页</a></h3>
+        {% else %}
+            <form action="/register/" id="register" method="post" enctype="multipart/form-data">
+                {% csrf_token %} 
+            
+                {{ user_form.as_p }}
+                {{ profile_form.as_p }}
+               
+               <!--
+              {% for user_field in user_form.visible_fields %} 
+                    {{ user_field.errors }} 
+                    {{ user_field.help_text }}   <br> 
+                    {{ user_field }}                <br> 
+                {% endfor %}
+
+                {% for profile_field in profile_form.visible_fields %} 
+                    {{ profile_field.errors }} 
+                    {{ profile_field.help_text }}   <br> 
+                    {{ profile_field }}                <br> 
+                {% endfor %}
+                -->
+                <input type="submit" name="submit" value="注册" />
+            </form>
+            {% endif %}
+</body>
+
+</html>

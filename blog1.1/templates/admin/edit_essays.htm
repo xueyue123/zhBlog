@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <title> 编辑随笔 </title>
+        <link rel="stylesheet" type="text/css" href="/static/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+        <script type="text/javascript" src="/static/js/modernizr.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
+        <script>
+        tinymce.init({
+                content_style: "body {font-size:14px; margin:0px; padding:0px}",
+                selector: "textarea#content",
+                theme: "modern",
+                plugins: [
+                        "autoresize advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                content_css: "css/content.css",
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [{
+                        title: 'h1一级标题',
+                        block: 'h1'
+                }, {
+                        title: 'h2一级标题',
+                        block: 'h2',
+                        styles: {
+                                color: '#000'
+                        }
+                }, {
+                        title: 'h3一级标题',
+                        block: 'h3',
+                        styles: {
+                                color: '#000'
+                        }
+                }, {
+                        title: 'h4一级标题',
+                        block: 'h4',
+                        styles: {
+                                color: '#000'
+                        }
+                }, {
+                        title: 'h5一级标题',
+                        block: 'h5',
+                        styles: {
+                                color: '#000'
+                        }
+                }, {
+                        title: 'h6一级标题',
+                        block: 'h6',
+                        styles: {
+                                color: '#000'
+                        }
+                }, {
+                        title: 'Bold text',
+                        inline: 'b'
+                }, {
+                        title: 'Red text',
+                        inline: 'span',
+                        styles: {
+                                color: '#ff0000'
+                        }
+                }, {
+                        title: 'Example 1',
+                        inline: 'span',
+                        classes: 'example1'
+                }, {
+                        title: 'Example 2',
+                        inline: 'span',
+                        classes: 'example2'
+                }, {
+                        title: 'Table styles'
+                }, {
+                        title: 'Table row 1',
+                        selector: 'tr',
+                        classes: 'tablerow1'
+                }],
+                language: 'zh_CN'
+        });
+        </script>
+        <script>
+        window.onload = function() {
+                var content = $("#temp_content").val();
+                tinyMCE.activeEditor.setContent(content);
+                //alert(content);
+        }
+        </script>
+</head>
+
+<body>
+        <!--main begin-->
+        <div class="article-wrap">
+                <div class="crumb-wrap">
+                        <div class="crumb-list"><a class="crumb-name" href="{% url 'article_manage' %}">随笔管理</a><span class="crumb-step">&gt;</span><span>编辑随笔</span></div>
+                </div>
+                <div class="article-result-wrap">
+                        <div class="result-content">
+                                <!--这是为了获取当前随笔的内容和id设置的，不显示在html中 -->
+                                <input type="text" class="temp_content" id="temp_id" value="{{ essays.id }}" />
+                                <input type="text" class="temp_content" id="temp_content" value="{{ essays.content }}" />
+                                <!--/end-->
+                                <form action="" method="post" id="article_form" name="article_form" enctype="multipart/form-data">
+                                        <table class="insert-tab" width="100%">
+                                                <tbody>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>标题：</th>
+                                                                <td>
+                                                                        <input class="common-text required" id="title" name="title" size="32" value="{{ essays.title }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>作者：</th>
+                                                                <td>
+                                                                        <input class="common-text" id="author" name="author" size="32" value="{{ essays.author }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td colspan="2">
+                                                                        <textarea name="content" class="common-textarea" id="content" value=""></textarea>
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td colspan="2">
+                                                                        <input class="btn btn-primary btn6 mr10" id="commit" type="button" value="提交">
+                                                                        <input class="btn btn6" onclick="history.go(-1)" type="button" value="返回">
+                                                                </td>
+                                                        </tr>
+                                                </tbody>
+                                        </table>
+                                </form>
+                        </div>
+                </div>
+        </div>
+</body>
+<script>
+$(document).ready(function() {
+        var id, category, title, author, content;
+
+        $("#commit").click(function(event) {
+                id = $("#temp_id").val();
+                title = $("#title").val();
+                author = $("#author").val();
+                content = tinyMCE.activeEditor.getContent(); //获取tinyMCE的内容要用它的语法，
+                //alert(content);
+
+                if (title == "") {
+                        alert("文章不能没有标题");
+                        return;
+                } else if (content == "") {
+                        alert("文章不能没有内容");
+                        return;
+                }
+
+                $.ajax({
+                        type: "POST",
+                        url: "/admin/add_essays/", //url标签不全会导致返回500错误
+                        data: {
+                                "id": id,
+                                "title": title,
+                                "author": author,
+                                "content": content,
+                                "add": "false",
+                        },
+                        success: function(ret) {
+                                if (ret == "添加成功") { //添加成功
+                                        location.replace("/admin/essays_manage/");
+                                } else { //Get请求，加载表单
+                                        location.reload(true);
+                                }
+                        }
+                });
+        });
+});
+</script>
+
+</html>

@@ -1,0 +1,57 @@
+{% extends 'blog/base.htm' %}
+<!---->
+{% load staticfiles %}
+<!---===================侧边栏分类列表部分===================-->
+{% block category %}
+<!---->
+{% for c in categories %}
+<li><a id="{{ c.id }}" onclick="category_article_list(this)" href="#">{{ c.name }}</a> ({{ c.count }})</li>
+{% endfor %}
+<!---->
+{% endblock %}
+<!---==================侧边栏随笔列表部分====================-->
+{% block essays %}
+<div class="catListEssay">
+        <h3 class="catListTitle">最新随笔</h3>
+        <ul>
+                {% for e in essays %}
+                <li><a id="{{ e.id }}" onclick="read_essays(this)" href="#">{{ e.title }}</a></li>
+                {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+<!---=================点击留言，显示留言页面=====================-->
+{% block content %}
+<div id="Profile1_panelAdd">
+        <form action="">
+                <table border="0">
+                        <tr>
+                                <td align="right"><b>昵称：</b></td>
+                                <td>
+                                        <input name="nickname" type="text" value="" id="nickname" size="64" style="width: 220px;" />
+                                </td>
+                        </tr>
+                        <tr>
+                                <td align="right"><b>标题：</b></td>
+                                <td>
+                                        <input name="title" type="text" id="message_title" size="32" style="width: 220px;" />
+                                </td>
+                        </tr>
+                        <tr>
+                                <td align="right" valign="top"><b>内容：</b>
+                                        <br /> &nbsp;
+                                        <span class="gray">(200字以内)</span> </td>
+                                <td>
+                                        <textarea name="content" id="message_content" rows="8" cols="50"></textarea>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td colspan="2" align="center">
+                                        <input type="button" onclick="commit_message()" value="提交留言" />
+                                </td>
+                        </tr>
+                </table>
+        </form>
+</div>
+<!-- -->
+{% endblock %}

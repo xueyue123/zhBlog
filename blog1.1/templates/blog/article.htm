@@ -1,0 +1,75 @@
+{% extends 'blog/base.htm' %}
+<!---->
+{% load staticfiles %}
+<!---===================侧边栏分类列表部分===================-->
+{% block category %}
+<!---->
+{% for c in categories %}
+<li><a id="{{ c.id }}" onclick="category_article_list(this)" href="#">{{ c.name }}</a> ({{ c.count }})</li>
+{% endfor %}
+<!---->
+{% endblock %}
+<!---==================侧边栏随笔列表部分====================-->
+{% block essays %}
+<div class="catListEssay">
+        <h3 class="catListTitle">最新随笔</h3>
+        <ul>
+                {% for e in essays %}
+                <li><a id="{{ e.id }}" onclick="read_essays(this)" href="#">{{ e.title }}</a></li>
+                {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+<!---===========================================================================================-->
+{% block content %}
+<!---=================点击文章，显示文章内容=====================-->
+<div id="topics">
+        <div class="post">
+                {% autoescape off %}
+                <div class="postTitle"> {{ article.title }} </div>
+                <div class="postBody">
+                        {{ article.content }}
+                </div>
+                <div class="clear"></div>
+                {% endautoescape %}
+                <br>
+                <br>
+                <br>
+        </div>
+</div>
+<div class="clear"></div>
+<!---=================评论区域=====================-->
+<div class="comment">
+        <h2>发表评论: </h2>
+        <div class="nickname">昵称:
+                <input type="text" id="comment_nickname" value="" size="32" />
+        </div>
+        <div class="content">
+                <form action="">
+                        <textarea name="" id="comment_content" cols="70" rows="10"></textarea>
+                        <br><br>
+                        <input type="button" id="{{ article.id }}" onclick="commit_comment(this)" value="提交评论" />
+                </form>
+        </div>
+</div>
+<br />
+<hr width="600px" />
+<div class="clear"></div>
+<!---=================评论列表=====================-->
+<div class="comment">
+        <h2>评论列表:</h2>
+        <!-- -->
+        {% if comments %}
+        <!-- -->
+        {% for comment in comments %}
+        <div class="comment_title">
+                #昵称: {{ comment.nickname }} &nbsp&nbsp|&nbsp&nbsp{{ comment.date|date:"Y-m-d" }} {{ comment.time|time:"H:i:s" }}
+        </div>
+        <div class="comment_content">
+                <p>{{ comment.content }}</p>
+        </div>
+        <br> {% endfor %} {% else %}
+        <p>没有评论</p>
+        {% endif %}
+</div>
+{% endblock %}

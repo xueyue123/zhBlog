@@ -1,0 +1,36 @@
+{% extends 'blog/base.htm' %}
+<!---->
+{% load staticfiles %}
+<!---===================侧边栏分类列表部分===================-->
+{% block category %}
+<!---->
+{% for c in categories %}
+<li><a id="{{ c.id }}" onclick="category_article_list(this)" href="#">{{ c.name }}</a> ({{ c.count }})</li>
+{% endfor %}
+<!---->
+{% endblock %}
+<!---==================侧边栏随笔列表部分====================-->
+{% block essays %}
+<div class="catListEssay">
+        <h3 class="catListTitle">最新随笔</h3>
+        <ul>
+                {% for e in essays %}
+                <li><a id="{{ e.id }}" onclick="read_essays(this)" href="#">{{ e.title }}</a></li>
+                {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+<!---===========================================================================================-->
+{% block content %}
+<!---================= 显示主页内容 =====================-->
+<!---=================点击随笔标题，显示随笔内容=====================-->
+<div class="day">
+        {% autoescape off %}
+        <div class="dayTitle">
+                {{ essay.title }}
+        </div>
+        {{ essay.content }}
+        <!-- -->
+        {% endautoescape %}
+</div>
+{% endblock %}

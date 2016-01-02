@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <title> 添加文章 </title>
+        <link rel="stylesheet" type="text/css" href="/static/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+        <script type="text/javascript" src="/static/js/modernizr.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
+        <script type="text/javascript" src="/static/js/init_tinymce.js"></script>
+</head>
+
+<body>
+        <!--main begin-->
+        <div class="article-wrap">
+                <div class="crumb-wrap">
+                        <div class="crumb-list"><a class="crumb-name" onclick="history.go(-1)" href="#">文章管理</a><span class="crumb-step">&gt;</span><span>新增文章</span></div>
+                </div>
+                <div class="article-result-wrap">
+                        <div class="result-content">
+                                <form action="" method="post" id="article_form" name="article_form" enctype="multipart/form-data">
+                                        <table class="insert-tab" width="100%">
+                                                <tbody>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>分类：</th>
+                                                                <td>
+                                                                        <select name="colId" id="category" class="required">
+                                                                                <option value="">请选择</option>
+                                                                                {% for c in categories %}
+                                                                                <option value="{{ c.name }}"> {{ c.name }} </option>
+                                                                                {% endfor %}
+                                                                        </select>
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>标题：</th>
+                                                                <td>
+                                                                        <input class="common-text required" id="title" name="title" size="32" value="" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>作者：</th>
+                                                                <td>
+                                                                        <input class="common-text" id="author" name="author" size="32" value="{{ userprofile.nickname }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>标签：</th>
+                                                                <td>
+                                                                        <input class="common-text" id="tag" name="tag" size="32" value="{{ article.tag }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td colspan="2">
+                                                                        <textarea name="content" class="common-textarea" id="content"></textarea>
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td colspan="2">
+                                                                        <input class="btn btn-primary btn6 mr10" onclick="submitfcn($('form'))" id="commit"  type="button" value="提交">
+                                                                        <input class="btn btn6" onclick="history.go(-1)" type="button" value="返回">
+                                                                </td>
+                                                        </tr>
+                                                </tbody>
+                                        </table>
+                                </form>
+                        </div>
+                </div>
+        </div>
+</body>
+<script>
+        var category, title, author, tag, content;
+        function submitfcn(form){
+                category = $("#category").val();
+                title = $("#title").val();
+                author = $("#author").val();
+                tag = $("#tag").val();
+                //content = $("#content").val();        //这样获取tinyMCE的时候必须先刷新一次页面才行，弃用
+                //content = document.getElementById("content").value;   //这样获取tinyMCE的时候必须先刷新一次页面才行，弃用
+                //content = tinyMCE.getInstanceById('content').getBody().innerHTML;     //网上说这样可以获取tinyMCE的内容，亲测不可用
+                content = tinyMCE.activeEditor.getContent();    //获取tinyMCE的内容要用它的语法，
+                //alert(content);
+                //alert(category + title + author + content);
+
+                if (category == "") {
+                        alert("请为文章选择分类");
+                        return;
+                } else if (title == "") {
+                        alert("文章不能没有标题");
+                        return;
+                } else if (content == "") {
+                        alert("文章不能没有内容");
+                        return;
+                }
+
+                $.ajax({
+                        type: "POST",
+                        url: "/admin/add_article/", //url标签不全会导致返回500错误
+                        data: {
+                                "category": category,
+                                "title": title,
+                                "author": author,
+                                "tag": tag,
+                                "content": content,
+                                "add": "true",
+                        },
+                        success: function(ret) {
+                                if (ret == "添加成功") { //添加成功
+                                        location.replace("/admin/article_manage/");
+                                } else { //Get请求，加载表单
+                                        location.reload(true);
+                                }
+                        }
+                });
+        }
+</script>
+
+</html>

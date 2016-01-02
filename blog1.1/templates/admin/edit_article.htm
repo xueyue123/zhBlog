@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <title> 编辑文章 </title>
+        <link rel="stylesheet" type="text/css" href="/static/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+        <script type="text/javascript" src="/static/js/modernizr.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
+        <script type="text/javascript" src="/static/js/init_tinymce.js"></script>
+        <script>
+        window.onload = function() {
+                var content = $("#temp_content").val();
+                tinyMCE.activeEditor.setContent(content);
+                //alert(content);
+        }
+        </script>
+</head>
+
+<body>
+        <!--main begin-->
+        <div class="article-wrap">
+                <div class="crumb-wrap">
+                        <div class="crumb-list"><a class="crumb-name" href="{% url 'article_manage' %}">文章管理</a><span class="crumb-step">&gt;</span><span>编辑文章</span></div>
+                </div>
+                <div class="article-result-wrap">
+                        <div class="result-content">
+                                <!--这是为了获取当前文章的内容和id设置的，不显示在html中 -->
+                                <input type="text" class="temp_content" id="temp_id" value="{{ article.id }}" />
+                                <input type="text" class="temp_content" id="temp_content" value="{{ article.content }}" />
+                                <!--/end-->
+                                <form action="" method="post" id="article_form" name="article_form" enctype="multipart/form-data">
+                                        <table class="insert-tab" width="100%">
+                                                <tbody>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>分类：</th>
+                                                                <td>
+                                                                        <select name="colId" id="category" class="required">
+                                                                                <option value="{{ article.category.name }}">{{ article.category.name }}</option>
+                                                                        </select>
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>标题：</th>
+                                                                <td>
+                                                                        <input class="common-text required" id="title" name="title" size="32" value="{{ article.title }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>作者：</th>
+                                                                <td>
+                                                                        <input class="common-text" id="author" name="author" size="32" value="{{ article.author }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th><i class="require-red">*</i>标签：</th>
+                                                                <td>
+                                                                        <input class="common-text" id="tag" name="tag" size="32" value="{{ article.tag }}" type="text">
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td colspan="2">
+                                                                        <textarea name="content" class="common-textarea" id="content" value=""></textarea>
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td colspan="2">
+                                                                        <input class="btn btn-primary btn6 mr10" id="commit" type="button" value="提交">
+                                                                        <input class="btn btn6" onclick="history.go(-1)" type="button" value="返回">
+                                                                </td>
+                                                        </tr>
+                                                </tbody>
+                                        </table>
+                                </form>
+                        </div>
+                </div>
+        </div>
+</body>
+<script>
+$(document).ready(function() {
+        var id, category, title, author, tag, content;
+
+        $("#commit").click(function(event) {
+                id = $("#temp_id").val();
+                category = $("#category").val();
+                title = $("#title").val();
+                author = $("#author").val();
+                tag = $("#tag").val();
+                content = tinyMCE.activeEditor.getContent(); //获取tinyMCE的内容要用它的语法，
+                //alert(content);
+                //alert(category + title + author + content);
+
+                if (category == "") {
+                        alert("请为文章选择分类");
+                        return;
+                } else if (title == "") {
+                        alert("文章不能没有标题");
+                        return;
+                } else if (content == "") {
+                        alert("文章不能没有内容");
+                        return;
+                }
+
+                $.ajax({
+                        type: "POST",
+                        url: "/admin/add_article/", //url标签不全会导致返回500错误
+                        data: {
+                                "id": id,
+                                "category": category,
+                                "title": title,
+                                "author": author,
+                                "tag": tag,
+                                "content": content,
+                                "add": "false",
+                        },
+                        success: function(ret) {
+                                if (ret == "添加成功") { //添加成功
+                                        location.replace("/admin/article_manage/");
+                                } else { //Get请求，加载表单
+                                        location.reload(true);
+                                }
+                        }
+                });
+        });
+});
+</script>
+
+</html>

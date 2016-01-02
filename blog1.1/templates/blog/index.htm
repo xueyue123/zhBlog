@@ -1,0 +1,59 @@
+{% extends 'blog/base.htm' %}
+<!---->
+{% load staticfiles %}
+<!---->
+<!---==================== head标签部分 ==================-->
+{% block head %}
+<link id="MainCss" type="text/css" rel="stylesheet" href="/static/css/style.css" />
+<!---->
+{% endblock %}
+<!---===================侧边栏分类列表部分===================-->
+{% block category %}
+<!---->
+{% for c in categories %}
+<li><a id="{{ c.id }}" onclick="category_article_list(this)" href="#">{{ c.name }}</a> ({{ c.count }})</li>
+{% endfor %}
+<!---->
+{% endblock %}
+<!---==================侧边栏随笔列表部分====================-->
+{% block essays %}
+<div class="catListEssay">
+        <h3 class="catListTitle">最新随笔</h3>
+        <ul>
+                {% for essay in essays %}
+                <li><a id="{{ essay.id }}" onclick="read_essays(this)" href="#">{{ essay.title }}</a></li>
+                {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+<!---===========================================================================================-->
+{% block content %}
+<!---================= 显示主页内容 =====================-->
+<div class="day">
+        <div class="dayTitle">
+                <a title="Day link" href="#"></a>&nbsp; 最新文章
+        </div>
+        <div class="postTitle">
+                <a class="postTitle2" href="#">这里是最新的文章列表，快来围观吧！</a>
+        </div>
+        <div class="postCon">
+                <ul>
+                        {% for article in articles %}
+                        <li>
+                                <img src="/static/images/notice.gif" alt="{{ article.title }}" />
+                                <a id="{{ article.id }}" onclick="read_article(this)" href="#" title="{{ article.title }}"> {{ article.title }} </a>
+                        </li>
+                        <p>
+                        </p>
+                        {% endfor %}
+                </ul>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="postDesc">
+                posted @ <a href="/user/{{ user.username }}/">{{ userprofile.nickname }}</a>
+        </div>
+        <div class="clear">
+        </div>
+</div>
+{% endblock %}
